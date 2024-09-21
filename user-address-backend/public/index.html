@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register User and Address</title>
+</head>
+<body>
+  <h1>User Registration Form</h1>
+  <form id="userForm" action="/api/users/register" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" required><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="message"></p>
+
+  <script>
+    document.getElementById('userForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const formData = {
+        name: document.getElementById('name').value,
+        address: document.getElementById('address').value,
+      };
+
+      try {
+        const response = await fetch('/api/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          document.getElementById('message').textContent = 'User registered successfully!';
+        } else {
+          document.getElementById('message').textContent = `Error: ${result.message}`;
+        }
+      } catch (error) {
+        document.getElementById('message').textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
